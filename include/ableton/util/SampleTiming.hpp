@@ -31,21 +31,21 @@ namespace util
  */
 struct SampleTiming
 {
-  double sampleAtTime(std::chrono::microseconds time) const
+  float sampleAtTime(std::chrono::microseconds time) const
   {
     using namespace std::chrono;
-    return duration_cast<duration<double>>(time - mBufferBegin).count() * mSampleRate;
+    return duration_cast<duration<float>>(time - mBufferBegin).count() * mSampleRate;
   }
 
-  std::chrono::microseconds timeAtSample(const double sample) const
+  std::chrono::microseconds timeAtSample(const float sample) const
   {
     using namespace std::chrono;
     return mBufferBegin
-           + duration_cast<microseconds>(duration<double>{sample / mSampleRate});
+           + duration_cast<microseconds>(duration<float>{sample / mSampleRate});
   }
 
   std::chrono::microseconds mBufferBegin;
-  double mSampleRate;
+  float mSampleRate;
 };
 
 } // namespace util

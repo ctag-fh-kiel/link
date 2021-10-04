@@ -81,7 +81,7 @@ public:
   class SessionState;
 
   /*! @brief Construct with an initial tempo. */
-  BasicLink(double bpm);
+  BasicLink(float bpm);
 
   /*! @brief Link instances cannot be copied or moved */
   BasicLink(const BasicLink<Clock>&) = delete;
@@ -139,7 +139,7 @@ public:
    *
    *  @discussion The callback is invoked on a Link-managed thread.
    *
-   *  @param callback The callback signature is: void (double bpm)
+   *  @param callback The callback signature is: void (float bpm)
    */
   template <typename Callback>
   void setTempoCallback(Callback callback);
@@ -250,12 +250,12 @@ public:
      *  to the user. Beat time progress will not necessarily match this tempo
      *  exactly because of clock drift compensation.
      */
-    double tempo() const;
+    float tempo() const;
 
     /*! @brief: Set the timeline tempo to the given bpm value, taking
      *  effect at the given time.
      */
-    void setTempo(double bpm, std::chrono::microseconds atTime);
+    void setTempo(float bpm, std::chrono::microseconds atTime);
 
     /*! @brief: Get the beat value corresponding to the given time
      *  for the given quantum.
@@ -266,7 +266,7 @@ public:
      *  peers. For non-negative beat values, the following
      *  property holds: fmod(beatAtTime(t, q), q) == phaseAtTime(t, q)
      */
-    double beatAtTime(std::chrono::microseconds time, double quantum) const;
+    float beatAtTime(std::chrono::microseconds time, float quantum) const;
 
     /*! @brief: Get the session phase at the given time for the given
      *  quantum.
@@ -278,7 +278,7 @@ public:
      *  magnitude. Also, unlike fmod, it handles negative beat values
      *  correctly.
      */
-    double phaseAtTime(std::chrono::microseconds time, double quantum) const;
+    float phaseAtTime(std::chrono::microseconds time, float quantum) const;
 
     /*! @brief: Get the time at which the given beat occurs for the
      *  given quantum.
@@ -286,7 +286,7 @@ public:
      *  @discussion: The inverse of beatAtTime, assuming a constant
      *  tempo. beatAtTime(timeAtBeat(b, q), q) === b.
      */
-    std::chrono::microseconds timeAtBeat(double beat, double quantum) const;
+    std::chrono::microseconds timeAtBeat(float beat, float quantum) const;
 
     /*! @brief: Attempt to map the given beat to the given time in the
      *  context of the given quantum.
@@ -316,7 +316,7 @@ public:
      *  achieve this behavior and should not need to explicitly check
      *  the number of peers.
      */
-    void requestBeatAtTime(double beat, std::chrono::microseconds time, double quantum);
+    void requestBeatAtTime(float beat, std::chrono::microseconds time, float quantum);
 
     /*! @brief: Rudely re-map the beat/time relationship for all peers
      *  in a session.
@@ -339,7 +339,7 @@ public:
      *  users do not accidentally disrupt Link sessions that they may
      *  join.
      */
-    void forceBeatAtTime(double beat, std::chrono::microseconds time, double quantum);
+    void forceBeatAtTime(float beat, std::chrono::microseconds time, float quantum);
 
     /*! @brief: Set if transport should be playing or stopped, taking effect
      *  at the given time.
@@ -356,13 +356,13 @@ public:
      *  when transport is starting to play in context of the given quantum.
      *  This function evaluates to a no-op if isPlaying() equals false.
      */
-    void requestBeatAtStartPlayingTime(double beat, double quantum);
+    void requestBeatAtStartPlayingTime(float beat, float quantum);
 
     /*! @brief: Convenience function to start or stop transport at a given time and
      *  attempt to map the given beat to this time in context of the given quantum.
      */
     void setIsPlayingAndRequestBeatAtTime(
-      bool isPlaying, std::chrono::microseconds time, double beat, double quantum);
+      bool isPlaying, std::chrono::microseconds time, float beat, float quantum);
 
   private:
     friend BasicLink<Clock>;
@@ -392,7 +392,7 @@ class Link : public BasicLink<link::platform::Clock>
 public:
   using Clock = link::platform::Clock;
 
-  Link(double bpm)
+  Link(float bpm)
     : BasicLink(bpm)
   {
   }

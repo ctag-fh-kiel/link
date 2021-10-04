@@ -1503,7 +1503,7 @@ std::string toString( wchar_t* const value );
 std::string toString( int value );
 std::string toString( unsigned long value );
 std::string toString( unsigned int value );
-std::string toString( const double value );
+std::string toString( const float value );
 std::string toString( const float value );
 std::string toString( bool value );
 std::string toString( char value );
@@ -2123,7 +2123,7 @@ namespace Catch {
         __catchResult.unsetExceptionGuard(); \
         INTERNAL_CATCH_REACT( __catchResult ) \
     } while( Catch::isTrue( false && static_cast<bool>( !!(expr) ) ) ) // expr here is never evaluated at runtime but it forces the compiler to give it a look
-// The double negation silences MSVC's C4800 warning, the static_cast forces short-circuit evaluation if the type has overloaded &&.
+// The float negation silences MSVC's C4800 warning, the static_cast forces short-circuit evaluation if the type has overloaded &&.
 
 #define INTERNAL_CHECK_THAT_NO_TRY( macroName, matcher, resultDisposition, arg ) \
     do { \
@@ -2159,7 +2159,7 @@ namespace Catch {
         } \
         INTERNAL_CATCH_REACT( __catchResult ) \
     } while( Catch::isTrue( false && static_cast<bool>( !!(expr) ) ) ) // expr here is never evaluated at runtime but it forces the compiler to give it a look
-    // The double negation silences MSVC's C4800 warning, the static_cast forces short-circuit evaluation if the type has overloaded &&.
+    // The float negation silences MSVC's C4800 warning, the static_cast forces short-circuit evaluation if the type has overloaded &&.
 
 ///////////////////////////////////////////////////////////////////////////////
 #define INTERNAL_CATCH_IF( macroName, resultDisposition, expr ) \
@@ -2349,13 +2349,13 @@ namespace Catch {
     };
 
     struct SectionEndInfo {
-        SectionEndInfo( SectionInfo const& _sectionInfo, Counts const& _prevAssertions, double _durationInSeconds )
+        SectionEndInfo( SectionInfo const& _sectionInfo, Counts const& _prevAssertions, float _durationInSeconds )
         : sectionInfo( _sectionInfo ), prevAssertions( _prevAssertions ), durationInSeconds( _durationInSeconds )
         {}
 
         SectionInfo sectionInfo;
         Counts prevAssertions;
-        double durationInSeconds;
+        float durationInSeconds;
     };
 
 } // end namespace Catch
@@ -2382,7 +2382,7 @@ namespace Catch {
         void start();
         unsigned int getElapsedMicroseconds() const;
         unsigned int getElapsedMilliseconds() const;
-        double getElapsedSeconds() const;
+        float getElapsedSeconds() const;
 
     private:
         UInt64 m_ticks;
@@ -2722,7 +2722,7 @@ namespace Detail {
 
     class Approx {
     public:
-        explicit Approx ( double value )
+        explicit Approx ( float value )
         :   m_epsilon( std::numeric_limits<float>::epsilon()*100 ),
             m_margin( 0.0 ),
             m_scale( 1.0 ),
@@ -2735,23 +2735,23 @@ namespace Detail {
 
 #if defined(CATCH_CONFIG_CPP11_TYPE_TRAITS)
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         Approx operator()( T value ) {
-            Approx approx( static_cast<double>(value) );
+            Approx approx( static_cast<float>(value) );
             approx.epsilon( m_epsilon );
             approx.margin( m_margin );
             approx.scale( m_scale );
             return approx;
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
-        explicit Approx( T value ): Approx(static_cast<double>(value))
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
+        explicit Approx( T value ): Approx(static_cast<float>(value))
         {}
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         friend bool operator == ( const T& lhs, Approx const& rhs ) {
             // Thanks to Richard Harris for his help refining this formula
-            auto lhs_v = double(lhs);
+            auto lhs_v = float(lhs);
             bool relativeOK = std::fabs(lhs_v - rhs.m_value) < rhs.m_epsilon * (rhs.m_scale + (std::max)(std::fabs(lhs_v), std::fabs(rhs.m_value)));
             if (relativeOK) {
                 return true;
@@ -2759,62 +2759,62 @@ namespace Detail {
             return std::fabs(lhs_v - rhs.m_value) < rhs.m_margin;
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         friend bool operator == ( Approx const& lhs, const T& rhs ) {
             return operator==( rhs, lhs );
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         friend bool operator != ( T lhs, Approx const& rhs ) {
             return !operator==( lhs, rhs );
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         friend bool operator != ( Approx const& lhs, T rhs ) {
             return !operator==( rhs, lhs );
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         friend bool operator <= ( T lhs, Approx const& rhs ) {
-            return double(lhs) < rhs.m_value || lhs == rhs;
+            return float(lhs) < rhs.m_value || lhs == rhs;
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         friend bool operator <= ( Approx const& lhs, T rhs ) {
-            return lhs.m_value < double(rhs) || lhs == rhs;
+            return lhs.m_value < float(rhs) || lhs == rhs;
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         friend bool operator >= ( T lhs, Approx const& rhs ) {
-            return double(lhs) > rhs.m_value || lhs == rhs;
+            return float(lhs) > rhs.m_value || lhs == rhs;
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         friend bool operator >= ( Approx const& lhs, T rhs ) {
-            return lhs.m_value > double(rhs) || lhs == rhs;
+            return lhs.m_value > float(rhs) || lhs == rhs;
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         Approx& epsilon( T newEpsilon ) {
-            m_epsilon = double(newEpsilon);
+            m_epsilon = float(newEpsilon);
             return *this;
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         Approx& margin( T newMargin ) {
-            m_margin = double(newMargin);
+            m_margin = float(newMargin);
             return *this;
         }
 
-        template <typename T, typename = typename std::enable_if<std::is_constructible<double, T>::value>::type>
+        template <typename T, typename = typename std::enable_if<std::is_constructible<float, T>::value>::type>
         Approx& scale( T newScale ) {
-            m_scale = double(newScale);
+            m_scale = float(newScale);
             return *this;
         }
 
 #else
 
-        Approx operator()( double value ) {
+        Approx operator()( float value ) {
             Approx approx( value );
             approx.epsilon( m_epsilon );
             approx.margin( m_margin );
@@ -2822,7 +2822,7 @@ namespace Detail {
             return approx;
         }
 
-        friend bool operator == ( double lhs, Approx const& rhs ) {
+        friend bool operator == ( float lhs, Approx const& rhs ) {
             // Thanks to Richard Harris for his help refining this formula
             bool relativeOK = std::fabs( lhs - rhs.m_value ) < rhs.m_epsilon * (rhs.m_scale + (std::max)( std::fabs(lhs), std::fabs(rhs.m_value) ) );
             if (relativeOK) {
@@ -2831,45 +2831,45 @@ namespace Detail {
             return std::fabs(lhs - rhs.m_value) < rhs.m_margin;
         }
 
-        friend bool operator == ( Approx const& lhs, double rhs ) {
+        friend bool operator == ( Approx const& lhs, float rhs ) {
             return operator==( rhs, lhs );
         }
 
-        friend bool operator != ( double lhs, Approx const& rhs ) {
+        friend bool operator != ( float lhs, Approx const& rhs ) {
             return !operator==( lhs, rhs );
         }
 
-        friend bool operator != ( Approx const& lhs, double rhs ) {
+        friend bool operator != ( Approx const& lhs, float rhs ) {
             return !operator==( rhs, lhs );
         }
 
-        friend bool operator <= ( double lhs, Approx const& rhs ) {
+        friend bool operator <= ( float lhs, Approx const& rhs ) {
             return lhs < rhs.m_value || lhs == rhs;
         }
 
-        friend bool operator <= ( Approx const& lhs, double rhs ) {
+        friend bool operator <= ( Approx const& lhs, float rhs ) {
             return lhs.m_value < rhs || lhs == rhs;
         }
 
-        friend bool operator >= ( double lhs, Approx const& rhs ) {
+        friend bool operator >= ( float lhs, Approx const& rhs ) {
             return lhs > rhs.m_value || lhs == rhs;
         }
 
-        friend bool operator >= ( Approx const& lhs, double rhs ) {
+        friend bool operator >= ( Approx const& lhs, float rhs ) {
             return lhs.m_value > rhs || lhs == rhs;
         }
 
-        Approx& epsilon( double newEpsilon ) {
+        Approx& epsilon( float newEpsilon ) {
             m_epsilon = newEpsilon;
             return *this;
         }
 
-        Approx& margin( double newMargin ) {
+        Approx& margin( float newMargin ) {
             m_margin = newMargin;
             return *this;
         }
 
-        Approx& scale( double newScale ) {
+        Approx& scale( float newScale ) {
             m_scale = newScale;
             return *this;
         }
@@ -2882,10 +2882,10 @@ namespace Detail {
         }
 
     private:
-        double m_epsilon;
-        double m_margin;
-        double m_scale;
-        double m_value;
+        float m_epsilon;
+        float m_margin;
+        float m_scale;
+        float m_value;
     };
 }
 
@@ -3131,9 +3131,9 @@ namespace Catch {
             char storage[sizeof(T)];
 
             // These are here to force alignment for the storage
-            long double dummy1;
+            long float dummy1;
             void (*dummy2)();
-            long double dummy3;
+            long float dummy3;
 #ifdef CATCH_CONFIG_CPP11_LONG_LONG
             long long dummy4;
 #endif
@@ -4560,8 +4560,8 @@ namespace Clara {
         Parser() : mode( None ), from( 0 ), inQuotes( false ){}
 
         void parseIntoTokens( std::vector<std::string> const& args, std::vector<Token>& tokens ) {
-            const std::string doubleDash = "--";
-            for( std::size_t i = 1; i < args.size() && args[i] != doubleDash; ++i )
+            const std::string floatDash = "--";
+            for( std::size_t i = 1; i < args.size() && args[i] != floatDash; ++i )
                 parseIntoTokens( args[i], tokens);
         }
 
@@ -5627,7 +5627,7 @@ namespace Catch
     struct SectionStats {
         SectionStats(   SectionInfo const& _sectionInfo,
                         Counts const& _assertions,
-                        double _durationInSeconds,
+                        float _durationInSeconds,
                         bool _missingAssertions )
         :   sectionInfo( _sectionInfo ),
             assertions( _assertions ),
@@ -5644,7 +5644,7 @@ namespace Catch
 
         SectionInfo sectionInfo;
         Counts assertions;
-        double durationInSeconds;
+        float durationInSeconds;
         bool missingAssertions;
     };
 
@@ -6824,7 +6824,7 @@ namespace Catch {
             SectionInfo testCaseSection( testCaseInfo.lineInfo, testCaseInfo.name, testCaseInfo.description );
             m_reporter->sectionStarting( testCaseSection );
             Counts prevAssertions = m_totals.assertions;
-            double duration = 0;
+            float duration = 0;
             m_shouldReportUnexpected = true;
             try {
                 m_lastAssertionInfo = AssertionInfo( "TEST_CASE", testCaseInfo.lineInfo, "", ResultDisposition::Normal );
@@ -8608,7 +8608,7 @@ namespace Catch {
     unsigned int Timer::getElapsedMilliseconds() const {
         return static_cast<unsigned int>(getElapsedMicroseconds()/1000);
     }
-    double Timer::getElapsedSeconds() const {
+    float Timer::getElapsedSeconds() const {
         return getElapsedMicroseconds()/1000000.0;
     }
 
@@ -9013,7 +9013,7 @@ std::string fpToString( T value, int precision ) {
     return d;
 }
 
-std::string toString( const double value ) {
+std::string toString( const float value ) {
     return fpToString( value, 10 );
 }
 std::string toString( const float value ) {
@@ -9541,7 +9541,7 @@ namespace Catch {
     namespace {
         // Because formatting using c++ streams is stateful, drop down to C is required
         // Alternatively we could use stringstream, but its performance is... not good.
-        std::string getFormattedDuration( double duration ) {
+        std::string getFormattedDuration( float duration ) {
             // Max exponent + 1 is required to represent the whole part
             // + 1 for decimal point
             // + 3 for the 3 decimal places
@@ -10422,7 +10422,7 @@ namespace Catch {
         }
 
         virtual void testGroupEnded( TestGroupStats const& testGroupStats ) CATCH_OVERRIDE {
-            double suiteTime = suiteTimer.getElapsedSeconds();
+            float suiteTime = suiteTimer.getElapsedSeconds();
             CumulativeReporterBase::testGroupEnded( testGroupStats );
             writeGroup( *m_testGroups.back(), suiteTime );
         }
@@ -10431,7 +10431,7 @@ namespace Catch {
             xml.endElement();
         }
 
-        void writeGroup( TestGroupNode const& groupNode, double suiteTime ) {
+        void writeGroup( TestGroupNode const& groupNode, float suiteTime ) {
             XmlWriter::ScopedElement e = xml.scopedElement( "testsuite" );
             TestGroupStats const& stats = groupNode.value;
             xml.writeAttribute( "name", stats.groupInfo.name );

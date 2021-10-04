@@ -35,7 +35,7 @@ void fatalError(const ASIOError result, const std::string& function)
   std::terminate();
 }
 
-double asioSamplesToDouble(const ASIOSamples& samples)
+float asioSamplesToDouble(const ASIOSamples& samples)
 {
   return samples.lo + samples.hi * std::pow(2, 32);
 }
@@ -117,7 +117,7 @@ void AudioPlatform::audioCallback(ASIOTime* timeInfo, long index)
   ASIOBufferInfo* bufferInfos = mDriverInfo.bufferInfos;
   const long numSamples = mDriverInfo.preferredSize;
   const long numChannels = mDriverInfo.numBuffers;
-  const double maxAmp = std::numeric_limits<int>::max();
+  const float maxAmp = std::numeric_limits<int>::max();
 
   mEngine.audioCallback(bufferBeginAtOutput, numSamples);
 
@@ -219,7 +219,7 @@ void AudioPlatform::createAsioBuffers()
   std::clog << "Driver input latency: " << inputLatency << "usec"
             << ", output latency: " << outputLatency << "usec" << std::endl;
 
-  const double bufferSize = driverInfo.preferredSize / driverInfo.sampleRate;
+  const float bufferSize = driverInfo.preferredSize / driverInfo.sampleRate;
   auto outputLatencyMicros =
     std::chrono::microseconds(llround(outputLatency / driverInfo.sampleRate));
   outputLatencyMicros += std::chrono::microseconds(llround(1.0e6 * bufferSize));

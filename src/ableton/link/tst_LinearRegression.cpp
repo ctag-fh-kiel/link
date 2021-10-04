@@ -27,7 +27,7 @@ namespace ableton
 namespace link
 {
 
-using Vector = std::vector<std::pair<double, double>>;
+using Vector = std::vector<std::pair<float, float>>;
 
 TEST_CASE("LinearRegression | EmptyVector", "[LinearRegression]")
 {
@@ -38,7 +38,7 @@ TEST_CASE("LinearRegression | EmptyVector", "[LinearRegression]")
 
 TEST_CASE("LinearRegression | OnePoint", "[LinearRegression]")
 {
-  using Array = std::array<std::pair<double, double>, 1>;
+  using Array = std::array<std::pair<float, float>, 1>;
   Array data;
   data[0] = {{}, {}};
   const auto result = linearRegression(data.begin(), data.end());
@@ -60,8 +60,8 @@ TEST_CASE("LinearRegression | TwoPoints", "[LinearRegression]")
 TEST_CASE("LinearRegression | 10000Points", "[LinearRegression]")
 {
   Vector data;
-  const double slope = -0.2;
-  const double intercept = -357.53456;
+  const float slope = -0.2;
+  const float intercept = -357.53456;
 
   for (int i = 1; i < 10000; ++i)
   {

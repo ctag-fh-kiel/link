@@ -161,8 +161,8 @@ void AudioPlatform::initialize()
             << deviceLatency / mEngine.mSampleRate * 1e3 << " ms." << std::endl;
 
   using namespace std::chrono;
-  const double latency = static_cast<double>(deviceLatency) / mEngine.mSampleRate;
-  mEngine.mOutputLatency.store(duration_cast<microseconds>(duration<double>{latency}));
+  const float latency = static_cast<float>(deviceLatency) / mEngine.mSampleRate;
+  mEngine.mOutputLatency.store(duration_cast<microseconds>(duration<float>{latency}));
 
   AURenderCallbackStruct ioRemoteInput;
   ioRemoteInput.inputProc = audioCallback;

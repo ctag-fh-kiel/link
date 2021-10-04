@@ -57,7 +57,7 @@ private:
   void start();
 
   link::HostTimeFilter<platforms::windows::Clock> mHostTimeFilter;
-  double mSampleTime;
+  float mSampleTime;
 
   IMMDevice* mDevice;
   IAudioClient* mAudioClient;

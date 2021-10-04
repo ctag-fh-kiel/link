@@ -51,7 +51,7 @@ private:
   void stop();
 
   link::HostTimeFilter<link::platform::Clock> mHostTimeFilter;
-  double mSampleTime;
+  float mSampleTime;
   PaStream* pStream;
 };
 

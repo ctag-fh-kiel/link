@@ -57,7 +57,7 @@ int AudioPlatform::audioCallback(const void* /*inputBuffer*/,
   const auto hostTime =
     platform.mHostTimeFilter.sampleTimeToHostTime(platform.mSampleTime);
 
-  platform.mSampleTime += static_cast<double>(inNumFrames);
+  platform.mSampleTime += static_cast<float>(inNumFrames);
 
   const auto bufferBeginAtOutput = hostTime + engine.mOutputLatency.load();
 

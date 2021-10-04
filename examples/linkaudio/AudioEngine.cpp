@@ -35,7 +35,7 @@ AudioEngine::AudioEngine(Link& link)
   : mLink(link)
   , mSampleRate(44100.)
   , mOutputLatency(std::chrono::microseconds{0})
-  , mSharedEngineData({0., false, false, 4., false})
+  , mSharedEngineData({0.f, false, false, 4., false})
   , mLockfreeEngineData(mSharedEngineData)
   , mTimeAtLastClick{}
   , mIsPlaying(false)
@@ -63,24 +63,24 @@ bool AudioEngine::isPlaying() const
   return mLink.captureAppSessionState().isPlaying();
 }
 
-double AudioEngine::beatTime() const
+float AudioEngine::beatTime() const
 {
   const auto sessionState = mLink.captureAppSessionState();
   return sessionState.beatAtTime(mLink.clock().micros(), mSharedEngineData.quantum);
 }
 
-void AudioEngine::setTempo(double tempo)
+void AudioEngine::setTempo(float tempo)
 {
   std::lock_guard<std::mutex> lock(mEngineDataGuard);
   mSharedEngineData.requestedTempo = tempo;
 }
 
-double AudioEngine::quantum() const
+float AudioEngine::quantum() const
 {
   return mSharedEngineData.quantum;
 }
 
-void AudioEngine::setQuantum(double quantum)
+void AudioEngine::setQuantum(float quantum)
 {
   std::lock_guard<std::mutex> lock(mEngineDataGuard);
   mSharedEngineData.quantum = quantum;
@@ -98,10 +98,10 @@ void AudioEngine::setStartStopSyncEnabled(const bool enabled)
 
 void AudioEngine::setBufferSize(std::size_t size)
 {
-  mBuffer = std::vector<double>(size, 0.);
+  mBuffer = std::vector<float>(size, 0.);
 }
 
-void AudioEngine::setSampleRate(double sampleRate)
+void AudioEngine::setSampleRate(float sampleRate)
 {
   mSampleRate = sampleRate;
 }
@@ -129,27 +129,27 @@ AudioEngine::EngineData AudioEngine::pullEngineData()
 }
 
 void AudioEngine::renderMetronomeIntoBuffer(const Link::SessionState sessionState,
-  const double quantum,
+  const float quantum,
   const std::chrono::microseconds beginHostTime,
   const std::size_t numSamples)
 {
   using namespace std::chrono;
 
   // Metronome frequencies
-  static const double highTone = 1567.98;
-  static const double lowTone = 1108.73;
+  static const float highTone = 1567.98;
+  static const float lowTone = 1108.73;
   // 100ms click duration
-  static const auto clickDuration = duration<double>{0.1};
+  static const auto clickDuration = duration<float>{0.1f};
 
   // The number of microseconds that elapse between samples
   const auto microsPerSample = 1e6 / mSampleRate;
 
   for (std::size_t i = 0; i < numSamples; ++i)
   {
-    double amplitude = 0.;
+    float amplitude = 0.;
     // Compute the host time for this sample and the last.
     const auto hostTime =
-      beginHostTime + microseconds(llround(static_cast<double>(i) * microsPerSample));
+      beginHostTime + microseconds(llround(static_cast<float>(i) * microsPerSample));
     const auto lastSampleHostTime = hostTime - microseconds(llround(microsPerSample));
 
     // Only make sound for positive beat magnitudes. Negative beat
@@ -166,7 +166,7 @@ void AudioEngine::renderMetronomeIntoBuffer(const Link::SessionState sessionStat
       }
 
       const auto secondsAfterClick =
-        duration_cast<duration<double>>(hostTime - mTimeAtLastClick);
+        duration_cast<duration<float>>(hostTime - mTimeAtLastClick);
 
       // If we're within the click duration of the last beat, render
       // the click tone into this sample

@@ -34,7 +34,7 @@ template <class Clock>
 class HostTimeFilter
 {
   static const std::size_t kNumPoints = 512;
-  using Points = std::vector<std::pair<double, double>>;
+  using Points = std::vector<std::pair<float, float>>;
   using PointIt = typename Points::iterator;
 
 public:
@@ -52,9 +52,9 @@ public:
     mPoints.clear();
   }
 
-  std::chrono::microseconds sampleTimeToHostTime(const double sampleTime)
+  std::chrono::microseconds sampleTimeToHostTime(const float sampleTime)
   {
-    const auto micros = static_cast<double>(mHostTimeSampler.micros().count());
+    const auto micros = static_cast<float>(mHostTimeSampler.micros().count());
     const auto point = std::make_pair(sampleTime, micros);
 
     if (mPoints.size() < kNumPoints)

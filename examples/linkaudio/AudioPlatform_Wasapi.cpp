@@ -269,10 +269,10 @@ DWORD AudioPlatform::audioRunloop()
       fatalError(result, "Could not get render client buffer (in callback)");
     }
 
-    const double sampleRate = static_cast<double>(mStreamFormat->nSamplesPerSec);
+    const float sampleRate = static_cast<float>(mStreamFormat->nSamplesPerSec);
     using namespace std::chrono;
     const auto bufferDuration =
-      duration_cast<microseconds>(duration<double>{numSamples / sampleRate});
+      duration_cast<microseconds>(duration<float>{numSamples / sampleRate});
 
     const auto hostTime = mHostTimeFilter.sampleTimeToHostTime(mSampleTime);
 

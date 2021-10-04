@@ -49,7 +49,7 @@ private:
   void stop();
 
   link::HostTimeFilter<link::platform::Clock> mHostTimeFilter;
-  double mSampleTime;
+  float mSampleTime;
   jack_client_t* mpJackClient;
   jack_port_t** mpJackPorts;
 };

@@ -86,7 +86,7 @@ struct StartStopState
   }
 
   bool isPlaying{false};
-  Beats beats{0.};
+  Beats beats{0.f};
   std::chrono::microseconds timestamp{0};
 
 private:

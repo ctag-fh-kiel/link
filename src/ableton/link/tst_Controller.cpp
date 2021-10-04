@@ -196,7 +196,7 @@ void testSetAndGetClientState(
 
   clock.advance(microseconds{1});
   const auto initialTimeline =
-    Optional<Timeline>{Timeline{Tempo{60.}, Beats{0.}, kAnyTime}};
+    Optional<Timeline>{Timeline{Tempo{60.}, Beats{0.f}, kAnyTime}};
   const auto initialStartStopState =
     Optional<ClientStartStopState>{ClientStartStopState{false, kAnyTime, clock.micros()}};
   const auto initialClientState =
@@ -269,7 +269,7 @@ void testCallbackInvocation(SetClientStateFunctionT setClientState)
   const auto initialIsPlaying = true;
 
   const auto initialTimeline =
-    Optional<Timeline>{Timeline{initialTempo, Beats{0.}, kAnyTime}};
+    Optional<Timeline>{Timeline{initialTempo, Beats{0.f}, kAnyTime}};
   const auto initialStartStopState = Optional<ClientStartStopState>{
     ClientStartStopState{initialIsPlaying, kAnyTime, clock.micros()}};
   setClientState(controller, {initialTimeline, initialStartStopState, clock.micros()});
@@ -412,7 +412,7 @@ TEST_CASE("Controller | GetClientStateRtSafeGracePeriod", "[Controller]")
 
   clock.advance(microseconds{1});
   const auto initialTimeline =
-    Optional<Timeline>{Timeline{Tempo{50.}, Beats{0.}, clock.micros()}};
+    Optional<Timeline>{Timeline{Tempo{50.}, Beats{0.f}, clock.micros()}};
   const auto initialStartStopState =
     Optional<ClientStartStopState>{ClientStartStopState{true, kAnyTime, clock.micros()}};
   const auto initialState =

@@ -38,17 +38,17 @@ struct Clock
   {
     LARGE_INTEGER frequency;
     QueryPerformanceFrequency(&frequency);
-    mTicksToMicros = 1.0e6 / static_cast<double>(frequency.QuadPart);
+    mTicksToMicros = 1.0e6 / static_cast<float>(frequency.QuadPart);
   }
 
   Micros ticksToMicros(const Ticks ticks) const
   {
-    return Micros{llround(mTicksToMicros * static_cast<double>(ticks))};
+    return Micros{llround(mTicksToMicros * static_cast<float>(ticks))};
   }
 
   Ticks microsToTicks(const Micros micros) const
   {
-    return static_cast<Ticks>(static_cast<double>(micros.count()) / mTicksToMicros);
+    return static_cast<Ticks>(static_cast<float>(micros.count()) / mTicksToMicros);
   }
 
   Ticks ticks() const
@@ -63,7 +63,7 @@ struct Clock
     return ticksToMicros(ticks());
   }
 
-  double mTicksToMicros;
+  float mTicksToMicros;
 };
 
 } // namespace windows

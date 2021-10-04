@@ -27,7 +27,7 @@ namespace link
 namespace
 {
 
-const auto zero = Beats{0.};
+const auto zero = Beats{0.f};
 const auto one = Beats{1.};
 const auto two = Beats{2.};
 const auto three = Beats{3.};
@@ -41,7 +41,7 @@ const auto tl1 = Timeline{Tempo{60.}, Beats{-9.5}, microseconds{2000000}};
 TEST_CASE("phase | phase(x, 0) == 0", "[Phase]")
 {
   CHECK(phase(zero, zero) == zero);
-  CHECK(phase(Beats{0.1}, zero) == zero);
+  CHECK(phase(Beats{0.1f}, zero) == zero);
   CHECK(phase(one, zero) == zero);
   CHECK(phase(-one, zero) == zero);
 }
@@ -51,7 +51,7 @@ TEST_CASE("phase | phase(x, y) == x % y when x and y >= 0", "[Phase]")
   CHECK(phase(zero, zero) == zero % zero);
   CHECK(phase(one, zero) == one % zero);
   CHECK(phase(zero, one) == zero % one);
-  CHECK(phase(Beats{0.1}, one) == Beats{0.1} % one);
+  CHECK(phase(Beats{0.1f}, one) == Beats{0.1f} % one);
   CHECK(phase(Beats{2.3}, one) == Beats{2.3} % one);
   CHECK(phase(Beats{9.5}, Beats{2.3}) == Beats{9.5} % Beats{2.3});
 }
@@ -66,15 +66,15 @@ TEST_CASE("phase | phase of negatives is not mirrored around zero", "[Phase]")
 
 TEST_CASE("nextPhaseMatch | result == x when quantum == 0", "[Phase]")
 {
-  CHECK(nextPhaseMatch(Beats{0.1}, one, zero) == Beats{0.1});
+  CHECK(nextPhaseMatch(Beats{0.1f}, one, zero) == Beats{0.1f});
   CHECK(nextPhaseMatch(Beats{2.3}, Beats{9.5}, zero) == Beats{2.3});
   CHECK(nextPhaseMatch(Beats{-0.1}, Beats{-2.3}, zero) == Beats{-0.1});
 }
 
 TEST_CASE("nextPhaseMatch | result == target when 0 <= x < target < quantum", "[Phase]")
 {
-  CHECK(nextPhaseMatch(zero, Beats{0.1}, one) == Beats{0.1});
-  CHECK(nextPhaseMatch(Beats{0.1}, one, two) == one);
+  CHECK(nextPhaseMatch(zero, Beats{0.1f}, one) == Beats{0.1f});
+  CHECK(nextPhaseMatch(Beats{0.1f}, one, two) == one);
   CHECK(nextPhaseMatch(one, two, Beats{2.3}) == two);
   CHECK(nextPhaseMatch(two, Beats{2.3}, three) == Beats{2.3});
 }
@@ -83,8 +83,8 @@ TEST_CASE("nextPhaseMatch | some example cases", "[Phase]")
 {
   CHECK(nextPhaseMatch(one, Beats{2.3}, two) == Beats{2.3});
   CHECK(nextPhaseMatch(Beats{2.3}, Beats{-0.1}, two) == Beats{3.9});
-  CHECK(nextPhaseMatch(Beats{-9.5}, Beats{0.1}, two) == Beats{-7.9});
-  CHECK(nextPhaseMatch(Beats{-2.3}, Beats{0.1}, Beats{9.5}) == Beats{0.1});
+  CHECK(nextPhaseMatch(Beats{-9.5}, Beats{0.1f}, two) == Beats{-7.9});
+  CHECK(nextPhaseMatch(Beats{-2.3}, Beats{0.1f}, Beats{9.5}) == Beats{0.1f});
 }
 
 TEST_CASE("toPhaseEncodedBeats | result == tl.toBeats when quantum == 0", "[Phase]")

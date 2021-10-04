@@ -52,7 +52,7 @@ inline link::IncomingClientState toIncomingClientState(const link::ApiState& sta
 } // namespace detail
 
 template <typename Clock>
-inline BasicLink<Clock>::BasicLink(const double bpm)
+inline BasicLink<Clock>::BasicLink(const float bpm)
   : mController(link::Tempo(bpm),
       [this](const std::size_t peers) {
         std::lock_guard<std::mutex> lock(mCallbackMutex);
@@ -173,14 +173,14 @@ inline BasicLink<Clock>::SessionState::SessionState(
 }
 
 template <typename Clock>
-inline double BasicLink<Clock>::SessionState::tempo() const
+inline float BasicLink<Clock>::SessionState::tempo() const
 {
   return mState.timeline.tempo.bpm();
 }
 
 template <typename Clock>
 inline void BasicLink<Clock>::SessionState::setTempo(
-  const double bpm, const std::chrono::microseconds atTime)
+  const float bpm, const std::chrono::microseconds atTime)
 {
   const auto desiredTl = link::clampTempo(
     link::Timeline{link::Tempo(bpm), mState.timeline.toBeats(atTime), atTime});
@@ -189,16 +189,16 @@ inline void BasicLink<Clock>::SessionState::setTempo(
 }
 
 template <typename Clock>
-inline double BasicLink<Clock>::SessionState::beatAtTime(
-  const std::chrono::microseconds time, const double quantum) const
+inline float BasicLink<Clock>::SessionState::beatAtTime(
+  const std::chrono::microseconds time, const float quantum) const
 {
   return link::toPhaseEncodedBeats(mState.timeline, time, link::Beats{quantum})
     .floating();
 }
 
 template <typename Clock>
-inline double BasicLink<Clock>::SessionState::phaseAtTime(
-  const std::chrono::microseconds time, const double quantum) const
+inline float BasicLink<Clock>::SessionState::phaseAtTime(
+  const std::chrono::microseconds time, const float quantum) const
 {
   return link::phase(link::Beats{beatAtTime(time, quantum)}, link::Beats{quantum})
     .floating();
@@ -206,7 +206,7 @@ inline double BasicLink<Clock>::SessionState::phaseAtTime(
 
 template <typename Clock>
 inline std::chrono::microseconds BasicLink<Clock>::SessionState::timeAtBeat(
-  const double beat, const double quantum) const
+  const float beat, const float quantum) const
 {
   return link::fromPhaseEncodedBeats(
     mState.timeline, link::Beats{beat}, link::Beats{quantum});
@@ -214,7 +214,7 @@ inline std::chrono::microseconds BasicLink<Clock>::SessionState::timeAtBeat(
 
 template <typename Clock>
 inline void BasicLink<Clock>::SessionState::requestBeatAtTime(
-  const double beat, std::chrono::microseconds time, const double quantum)
+  const float beat, std::chrono::microseconds time, const float quantum)
 {
   if (mbRespectQuantum)
   {
@@ -228,7 +228,7 @@ inline void BasicLink<Clock>::SessionState::requestBeatAtTime(
 
 template <typename Clock>
 inline void BasicLink<Clock>::SessionState::forceBeatAtTime(
-  const double beat, const std::chrono::microseconds time, const double quantum)
+  const float beat, const std::chrono::microseconds time, const float quantum)
 {
   // There are two components to the beat adjustment: a phase shift
   // and a beat magnitude adjustment.
@@ -262,7 +262,7 @@ inline std::chrono::microseconds BasicLink<Clock>::SessionState::timeForIsPlayin
 
 template <typename Clock>
 inline void BasicLink<Clock>::SessionState::requestBeatAtStartPlayingTime(
-  const double beat, const double quantum)
+  const float beat, const float quantum)
 {
   if (isPlaying())
   {
@@ -272,7 +272,7 @@ inline void BasicLink<Clock>::SessionState::requestBeatAtStartPlayingTime(
 
 template <typename Clock>
 inline void BasicLink<Clock>::SessionState::setIsPlayingAndRequestBeatAtTime(
-  bool isPlaying, std::chrono::microseconds time, double beat, double quantum)
+  bool isPlaying, std::chrono::microseconds time, float beat, float quantum)
 {
   mState.startStopState = {isPlaying, time};
   requestBeatAtStartPlayingTime(beat, quantum);

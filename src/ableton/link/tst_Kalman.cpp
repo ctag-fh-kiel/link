@@ -46,7 +46,7 @@ TEST_CASE("Kalman | Check1", "[Kalman]")
 
 TEST_CASE("Kalman | Check2", "[Kalman]")
 {
-  double peerTimeDiff = 3e11;
+  float peerTimeDiff = 3e11;
   Kalman<5> filter;
 
   for (int i = 0; i < 15; ++i)

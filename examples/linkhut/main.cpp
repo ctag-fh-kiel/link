@@ -95,7 +95,7 @@ void printState(const std::chrono::microseconds time,
   const ableton::Link::SessionState sessionState,
   const bool linkEnabled,
   const std::size_t numPeers,
-  const double quantum,
+  const float quantum,
   const bool startStopSyncOn)
 {
   using namespace std;

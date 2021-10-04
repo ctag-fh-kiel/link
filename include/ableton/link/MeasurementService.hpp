@@ -40,7 +40,7 @@ class MeasurementService
 {
 public:
   using IoType = util::Injected<IoContext>;
-  using Point = std::pair<double, double>;
+  using Point = std::pair<float, float>;
   using MeasurementInstance = Measurement<Clock, IoContext>;
 
   MeasurementService(asio::ip::address_v4 address,

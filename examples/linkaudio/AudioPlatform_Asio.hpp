@@ -65,7 +65,7 @@ struct DriverInfo
 
 // Convenience function to print out an ASIO error code along with the function called
 void fatalError(const ASIOError result, const std::string& function);
-double asioSamplesToDouble(const ASIOSamples& samples);
+float asioSamplesToDouble(const ASIOSamples& samples);
 
 ASIOTime* bufferSwitchTimeInfo(ASIOTime* timeInfo, long index, ASIOBool);
 void bufferSwitch(long index, ASIOBool processNow);

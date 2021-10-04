@@ -40,37 +40,37 @@ struct Kalman
   {
   }
 
-  double getValue()
+  float getValue()
   {
     return mValue;
   }
 
-  double calculateVVariance()
+  float calculateVVariance()
   {
-    auto vVar = 0.;
-    auto meanOfDiffs = 0.;
+    auto vVar = 0.f;
+    auto meanOfDiffs = 0.f;
 
     for (size_t k = 0; k < (mVarianceLength); k++)
     {
       meanOfDiffs += (mMeasuredValues[k] - mFilterValues[k]);
     }
 
-    meanOfDiffs /= static_cast<double>(mVarianceLength);
+    meanOfDiffs /= static_cast<float>(mVarianceLength);
 
     for (size_t i = 0; i < (mVarianceLength); i++)
     {
       vVar += (pow(mMeasuredValues[i] - mFilterValues[i] - meanOfDiffs, 2.0));
     }
 
-    vVar /= static_cast<double>(mVarianceLength - 1);
+    vVar /= static_cast<float>(mVarianceLength - 1);
 
     return vVar;
   }
 
-  double calculateWVariance()
+  float calculateWVariance()
   {
-    auto wVar = 0.;
-    auto meanOfDiffs = 0.;
+    auto wVar = 0.f;
+    auto meanOfDiffs = 0.f;
 
     for (size_t k = 0; k < (mVarianceLength); k++)
     {
@@ -78,7 +78,7 @@ struct Kalman
                       - mFilterValues[(mCounter - k - 2) % mVarianceLength]);
     }
 
-    meanOfDiffs /= static_cast<double>(mVarianceLength);
+    meanOfDiffs /= static_cast<float>(mVarianceLength);
 
     for (size_t i = 0; i < (mVarianceLength); i++)
     {
@@ -87,12 +87,12 @@ struct Kalman
         2.0));
     }
 
-    wVar /= static_cast<double>(mVarianceLength - 1);
+    wVar /= static_cast<float>(mVarianceLength - 1);
 
     return wVar;
   }
 
-  void iterate(const double value)
+  void iterate(const float value)
   {
     const std::size_t currentIndex = mCounter % mVarianceLength;
     mMeasuredValues[currentIndex] = value;
@@ -111,10 +111,10 @@ struct Kalman
     else
     {
       // prediction equations
-      const double prevFilterValue = mFilterValues[(mCounter - 1) % mVarianceLength];
+      const float prevFilterValue = mFilterValues[(mCounter - 1) % mVarianceLength];
       mFilterValues[currentIndex] = prevFilterValue;
       const auto wVariance = calculateWVariance();
-      const double coVarianceEstimation = mCoVariance + wVariance;
+      const float coVarianceEstimation = mCoVariance + wVariance;
 
       // update equations
       const auto vVariance = calculateVVariance();
@@ -131,12 +131,12 @@ struct Kalman
     ++mCounter;
   }
 
-  double mValue;
-  double mCoVariance;
+  float mValue;
+  float mCoVariance;
   size_t mVarianceLength;
   size_t mCounter;
-  std::array<double, n> mFilterValues;
-  std::array<double, n> mMeasuredValues;
+  std::array<float, n> mFilterValues;
+  std::array<float, n> mMeasuredValues;
 };
 
 } // namespace link

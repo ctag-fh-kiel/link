@@ -83,7 +83,7 @@ TEST_CASE("session->client | EncodesSessionOrigin", "[ClientSessionTimelines]")
   // The new client timeline's origin should be at beat 0 on the
   // session timeline. This is how we encode the session origin in the
   // client timeline.
-  CHECK(xform.hostToGhost(newClient.timeOrigin) == session.fromBeats(Beats{0.}));
+  CHECK(xform.hostToGhost(newClient.timeOrigin) == session.fromBeats(Beats{0.f}));
 }
 
 

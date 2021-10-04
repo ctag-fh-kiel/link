@@ -62,7 +62,7 @@ struct Clock
     return ticksToMicros(ticks());
   }
 
-  double mTicksToMicros;
+  float mTicksToMicros;
 };
 
 } // namespace darwin

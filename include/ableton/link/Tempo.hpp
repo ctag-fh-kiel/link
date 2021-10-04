@@ -32,17 +32,17 @@ struct Tempo
   Tempo() = default;
 
   // Beats per minute
-  explicit Tempo(const double bpm)
+  explicit Tempo(const float bpm)
     : mValue(bpm)
   {
   }
 
   Tempo(const std::chrono::microseconds microsPerBeat)
-    : mValue(60. * 1e6 / static_cast<double>(microsPerBeat.count()))
+    : mValue(60. * 1e6 / static_cast<float>(microsPerBeat.count()))
   {
   }
 
-  double bpm() const
+  float bpm() const
   {
     return mValue;
   }
@@ -56,14 +56,14 @@ struct Tempo
   Beats microsToBeats(const std::chrono::microseconds micros) const
   {
     return Beats{
-      static_cast<double>(micros.count()) / static_cast<double>(microsPerBeat().count())};
+      static_cast<float>(micros.count()) / static_cast<float>(microsPerBeat().count())};
   }
 
   // Given the tempo, convert a beat to a time value
   std::chrono::microseconds beatsToMicros(const Beats beats) const
   {
     return std::chrono::microseconds{
-      std::llround(beats.floating() * static_cast<double>(microsPerBeat().count()))};
+      std::llround(beats.floating() * static_cast<float>(microsPerBeat().count()))};
   }
 
   // Model the NetworkByteStreamSerializable concept
@@ -118,7 +118,7 @@ struct Tempo
   }
 
 private:
-  double mValue = 0;
+  float mValue = 0;
 };
 
 } // namespace link

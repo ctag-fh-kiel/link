@@ -30,8 +30,8 @@ namespace link
 // Clamp the tempo of the given timeline to the valid Link range
 inline Timeline clampTempo(const Timeline timeline)
 {
-  const double kMinBpm = 20.0;
-  const double kMaxBpm = 999.0;
+  const float kMinBpm = 20.0;
+  const float kMaxBpm = 999.0;
   return {Tempo{(std::min)((std::max)(timeline.tempo.bpm(), kMinBpm), kMaxBpm)},
     timeline.beatOrigin, timeline.timeOrigin};
 }

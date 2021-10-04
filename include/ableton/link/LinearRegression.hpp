@@ -39,32 +39,32 @@ T pow2(T x)
 } // namespace detail
 
 template <typename It>
-std::pair<double, double> linearRegression(It begin, It end)
+std::pair<float, float> linearRegression(It begin, It end)
 {
   using namespace std;
-  using Point = pair<double, double>;
+  using Point = pair<float, float>;
 
-  const double numPoints = static_cast<double>(distance(begin, end));
+  const float numPoints = static_cast<float>(distance(begin, end));
 
-  const double meanX = accumulate(begin, end, 0.0, [](double a, Point b) {
+  const float meanX = accumulate(begin, end, 0.0, [](float a, Point b) {
     return a + b.first;
   }) / numPoints;
 
-  const double productXX = accumulate(begin, end, 0.0,
-    [&meanX](double a, Point b) { return a + detail::pow2(b.first - meanX); });
+  const float productXX = accumulate(begin, end, 0.0,
+    [&meanX](float a, Point b) { return a + detail::pow2(b.first - meanX); });
 
-  const double meanY = accumulate(begin, end, 0.0, [](double a, Point b) {
+  const float meanY = accumulate(begin, end, 0.0, [](float a, Point b) {
     return a + b.second;
   }) / numPoints;
 
-  const double productXY =
-    inner_product(begin, end, begin, 0.0, [](double a, double b) { return a + b; },
+  const float productXY =
+    inner_product(begin, end, begin, 0.0, [](float a, float b) { return a + b; },
       [&meanX, &meanY](
         Point a, Point b) { return ((a.first - meanX) * (b.second - meanY)); });
 
-  const double slope = productXX == 0.0 ? 0.0 : productXY / productXX;
+  const float slope = productXX == 0.0 ? 0.0 : productXY / productXX;
 
-  const double intercept = meanY - (slope * meanX);
+  const float intercept = meanY - (slope * meanX);
 
   return make_pair(slope, intercept);
 }

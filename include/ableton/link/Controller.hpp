@@ -50,8 +50,8 @@ template <typename Clock>
 inline SessionState initSessionState(const Tempo tempo, const Clock& clock)
 {
   using namespace std::chrono;
-  return {clampTempo(Timeline{tempo, Beats{0.}, microseconds{0}}),
-    StartStopState{false, Beats{0.}, microseconds{0}}, initXForm(clock)};
+  return {clampTempo(Timeline{tempo, Beats{0.f}, microseconds{0}}),
+    StartStopState{false, Beats{0.f}, microseconds{0}}, initXForm(clock)};
 }
 
 inline ClientState initClientState(const SessionState& sessionState)

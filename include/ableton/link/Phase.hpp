@@ -64,7 +64,7 @@ inline Beats nextPhaseMatch(const Beats x, const Beats target, const Beats quant
 // most quantum/2, but may be less than x.
 inline Beats closestPhaseMatch(const Beats x, const Beats target, const Beats quantum)
 {
-  return nextPhaseMatch(x - Beats{0.5 * quantum.floating()}, target, quantum);
+  return nextPhaseMatch(x - Beats{0.5f * quantum.floating()}, target, quantum);
 }
 
 // Interprets the given timeline as encoding a quantum boundary at its

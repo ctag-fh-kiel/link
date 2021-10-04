@@ -37,36 +37,36 @@ public:
   void startPlaying();
   void stopPlaying();
   bool isPlaying() const;
-  double beatTime() const;
-  void setTempo(double tempo);
-  double quantum() const;
-  void setQuantum(double quantum);
+  float beatTime() const;
+  void setTempo(float tempo);
+  float quantum() const;
+  void setQuantum(float quantum);
   bool isStartStopSyncEnabled() const;
   void setStartStopSyncEnabled(bool enabled);
 
 private:
   struct EngineData
   {
-    double requestedTempo;
+    float requestedTempo;
     bool requestStart;
     bool requestStop;
-    double quantum;
+    float quantum;
     bool startStopSyncOn;
   };
 
   void setBufferSize(std::size_t size);
-  void setSampleRate(double sampleRate);
+  void setSampleRate(float sampleRate);
   EngineData pullEngineData();
   void renderMetronomeIntoBuffer(Link::SessionState sessionState,
-    double quantum,
+    float quantum,
     std::chrono::microseconds beginHostTime,
     std::size_t numSamples);
   void audioCallback(const std::chrono::microseconds hostTime, std::size_t numSamples);
 
   Link& mLink;
-  double mSampleRate;
+  float mSampleRate;
   std::atomic<std::chrono::microseconds> mOutputLatency;
-  std::vector<double> mBuffer;
+  std::vector<float> mBuffer;
   EngineData mSharedEngineData;
   EngineData mLockfreeEngineData;
   std::chrono::microseconds mTimeAtLastClick;

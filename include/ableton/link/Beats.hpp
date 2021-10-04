@@ -32,7 +32,7 @@ struct Beats
 {
   Beats() = default;
 
-  explicit Beats(const double beats)
+  explicit Beats(const float beats)
     : mValue(std::llround(beats * 1e6))
   {
   }
@@ -42,9 +42,9 @@ struct Beats
   {
   }
 
-  double floating() const
+  float floating() const
   {
-    return static_cast<double>(mValue) / 1e6;
+    return static_cast<float>(mValue) / 1e6;
   }
 
   std::int64_t microBeats() const

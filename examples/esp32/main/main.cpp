@@ -8,7 +8,7 @@
 #include <nvs_flash.h>
 #include <protocol_examples_common.h>
 
-#define LED GPIO_NUM_2
+#define LED GPIO_NUM_5
 #define PRINT_LINK_STATE false
 
 unsigned int if_nametoindex(const char* ifName)
@@ -90,7 +90,7 @@ void tickTask(void* userParam)
 
     const auto state = link.captureAudioSessionState();
     const auto phase = state.phaseAtTime(link.clock().micros(), 1.);
-    gpio_set_level(LED, fmodf(phase, 1.) < 0.1);
+    gpio_set_level(LED, !(fmodf(phase, 1.f) < 0.1f));
     portYIELD();
   }
 }
@@ -103,7 +103,7 @@ extern "C" void app_main()
   ESP_ERROR_CHECK(example_connect());
 
   SemaphoreHandle_t tickSemphr = xSemaphoreCreateBinary();
-  timerGroup0Init(100, tickSemphr);
+  timerGroup0Init(500, tickSemphr);
 
   xTaskCreate(tickTask, "tick", 8192, tickSemphr, configMAX_PRIORITIES - 1, nullptr);
 }

@@ -56,25 +56,25 @@ class AudioPlatform
       return mLink.captureAppSessionState().isPlaying();
     }
 
-    double beatTime() const
+    float beatTime() const
     {
       auto sessionState = mLink.captureAppSessionState();
       return sessionState.beatAtTime(now(), mQuantum);
     }
 
-    void setTempo(double tempo)
+    void setTempo(float tempo)
     {
       auto sessionState = mLink.captureAppSessionState();
       sessionState.setTempo(tempo, now());
       mLink.commitAppSessionState(sessionState);
     }
 
-    double quantum() const
+    float quantum() const
     {
       return mQuantum;
     }
 
-    void setQuantum(double quantum)
+    void setQuantum(float quantum)
     {
       mQuantum = quantum;
     }
@@ -96,7 +96,7 @@ class AudioPlatform
     }
 
     Link& mLink;
-    double mQuantum;
+    float mQuantum;
   };
 
 public:

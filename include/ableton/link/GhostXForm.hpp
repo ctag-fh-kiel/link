@@ -33,14 +33,14 @@ struct GhostXForm
 {
   microseconds hostToGhost(const microseconds hostTime) const
   {
-    return microseconds{llround(slope * static_cast<double>(hostTime.count()))}
+    return microseconds{llround(slope * static_cast<float>(hostTime.count()))}
            + intercept;
   }
 
   microseconds ghostToHost(const microseconds ghostTime) const
   {
     return microseconds{
-      llround(static_cast<double>((ghostTime - intercept).count()) / slope)};
+      llround(static_cast<float>((ghostTime - intercept).count()) / slope)};
   }
 
   friend bool operator==(const GhostXForm lhs, const GhostXForm rhs)
@@ -53,7 +53,7 @@ struct GhostXForm
     return !(lhs == rhs);
   }
 
-  double slope;
+  float slope;
   microseconds intercept;
 };
 

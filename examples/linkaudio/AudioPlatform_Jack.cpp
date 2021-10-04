@@ -120,8 +120,8 @@ void AudioPlatform::initialize()
     std::terminate();
   }
 
-  const double bufferSize = jack_get_buffer_size(mpJackClient);
-  const double sampleRate = jack_get_sample_rate(mpJackClient);
+  const float bufferSize = jack_get_buffer_size(mpJackClient);
+  const float sampleRate = jack_get_sample_rate(mpJackClient);
   mEngine.setBufferSize(static_cast<std::size_t>(bufferSize));
   mEngine.setSampleRate(sampleRate);
 

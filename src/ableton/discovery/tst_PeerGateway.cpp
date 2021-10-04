@@ -29,10 +29,10 @@ namespace discovery
 namespace
 {
 
-struct TestNodeState : std::tuple<std::string, double>
+struct TestNodeState : std::tuple<std::string, float>
 {
-  TestNodeState(std::string ident, double tempo)
-    : std::tuple<std::string, double>(std::move(ident), std::move(tempo))
+  TestNodeState(std::string ident, float tempo)
+    : std::tuple<std::string, float>(std::move(ident), std::move(tempo))
   {
   }
 
