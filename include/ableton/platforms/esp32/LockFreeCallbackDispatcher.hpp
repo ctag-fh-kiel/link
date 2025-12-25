@@ -47,7 +47,7 @@ public:
     , mFallbackPeriod(std::move(fallbackPeriod))
     , mRunning(true)
   {
-    xTaskCreate(run, "link", 4096, this, tskIDLE_PRIORITY, &mTaskHandle);
+    xTaskCreatePinnedToCore(run, "link", 4096, this, tskIDLE_PRIORITY, &mTaskHandle, LINK_ESP_TASK_CORE_ID);
   }
 
   ~LockFreeCallbackDispatcher()
