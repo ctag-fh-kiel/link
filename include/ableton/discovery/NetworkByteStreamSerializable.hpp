@@ -112,7 +112,7 @@ std::pair<T, It> copyFromByteStream(It begin, const It end)
 
   if (distance(begin, end) < static_cast<ItDiff>(sizeof(T)))
   {
-    throw range_error("Parsing type from byte stream failed");
+    //throw range_error("Parsing type from byte stream failed");
   }
   else
   {

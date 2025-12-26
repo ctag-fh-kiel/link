@@ -69,14 +69,7 @@ void sendUdpMessage(Interface& iface,
   const auto messageEnd =
     v1::detail::encodeMessage(std::move(from), ttl, messageType, payload, messageBegin);
   const auto numBytes = static_cast<size_t>(distance(messageBegin, messageEnd));
-  try
-  {
-    iface.send(buffer.data(), numBytes, to);
-  }
-  catch (const std::runtime_error& err)
-  {
-    throw UdpSendException{err, iface.endpoint().address()};
-  }
+  iface.send(buffer.data(), numBytes, to);
 }
 
 // UdpMessenger uses a "shared_ptr pImpl" pattern to make it movable
@@ -119,14 +112,7 @@ public:
   {
     if (mpImpl != nullptr)
     {
-      try
-      {
-        mpImpl->sendByeBye();
-      }
-      catch (const UdpSendException& err)
-      {
-        debug(mpImpl->mIo->log()) << "Failed to send bye bye message: " << err.what();
-      }
+      mpImpl->sendByeBye();
     }
   }
 
@@ -321,20 +307,15 @@ private:
                           It payloadBegin,
                           It payloadEnd)
     {
-      try
-      {
-        auto state = NodeState::fromPayload(
-          std::move(header.ident), std::move(payloadBegin), std::move(payloadEnd));
 
-        // Handlers must only be called once
-        auto handler = std::move(mPeerStateHandler);
-        mPeerStateHandler = [](PeerState<NodeState>) {};
-        handler(PeerState<NodeState>{std::move(state), header.ttl});
-      }
-      catch (const std::runtime_error& err)
-      {
-        info(mIo->log()) << "Ignoring peer state message: " << err.what();
-      }
+      auto state = NodeState::fromPayload(
+        std::move(header.ident), std::move(payloadBegin), std::move(payloadEnd));
+
+      // Handlers must only be called once
+      auto handler = std::move(mPeerStateHandler);
+      mPeerStateHandler = [](PeerState<NodeState>) {};
+      handler(PeerState<NodeState>{std::move(state), header.ttl});
+
     }
 
     void receiveByeBye(NodeId nodeId)

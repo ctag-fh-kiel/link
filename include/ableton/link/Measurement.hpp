@@ -144,22 +144,14 @@ struct Measurement
         std::chrono::microseconds prevGHostTime{0};
         std::chrono::microseconds prevHostTime{0};
 
-        try
-        {
-          discovery::parsePayload<SessionMembership, GHostTime, PrevGHostTime, HostTime>(
-            payloadBegin,
-            messageEnd,
-            [&sessionId](const SessionMembership& sms) { sessionId = sms.sessionId; },
-            [&ghostTime](GHostTime gt) { ghostTime = std::move(gt.time); },
-            [&prevGHostTime](PrevGHostTime gt) { prevGHostTime = std::move(gt.time); },
-            [&prevHostTime](HostTime ht) { prevHostTime = std::move(ht.time); });
-        }
-        catch (const std::runtime_error& err)
-        {
-          warning(mLog) << "Failed parsing payload, caught exception: " << err.what();
-          listen();
-          return;
-        }
+
+        discovery::parsePayload<SessionMembership, GHostTime, PrevGHostTime, HostTime>(
+          payloadBegin,
+          messageEnd,
+          [&sessionId](const SessionMembership& sms) { sessionId = sms.sessionId; },
+          [&ghostTime](GHostTime gt) { ghostTime = std::move(gt.time); },
+          [&prevGHostTime](PrevGHostTime gt) { prevGHostTime = std::move(gt.time); },
+          [&prevHostTime](HostTime ht) { prevHostTime = std::move(ht.time); });
 
         if (mSessionId == sessionId)
         {
@@ -215,15 +207,7 @@ struct Measurement
       const auto msgEnd = v1::pingMessage(payload, msgBegin);
       const auto numBytes = static_cast<size_t>(std::distance(msgBegin, msgEnd));
 
-      try
-      {
-        mSocket.send(buffer.data(), numBytes, to);
-      }
-      catch (const std::runtime_error& err)
-      {
-        info(mLog) << "Failed to send Ping to " << to.address().to_string() << ": "
-                   << err.what();
-      }
+      mSocket.send(buffer.data(), numBytes, to);
     }
 
     void finish()

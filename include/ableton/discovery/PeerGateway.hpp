@@ -78,14 +78,7 @@ private:
     void updateState(NodeState state)
     {
       mMessenger->updateState(std::move(state));
-      try
-      {
-        mMessenger->broadcastState();
-      }
-      catch (const std::runtime_error& err)
-      {
-        info(mIo->log()) << "State broadcast failed on gateway: " << err.what();
-      }
+      mMessenger->broadcastState();
     }
 
     void listen() { mMessenger->receive(util::makeAsyncSafe(this->shared_from_this())); }

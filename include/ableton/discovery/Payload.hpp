@@ -123,7 +123,7 @@ void parseByteStream(HandlerMap<It>& map, It bsBegin, const It bsEnd)
     It valueEnd = valueBegin + header.size;
     if (bsEnd < valueEnd)
     {
-      throw range_error("Payload with incorrect size.");
+      //throw range_error("Payload with incorrect size.");
     }
 
     // The next entry will start at the end of this one
@@ -267,7 +267,7 @@ struct ParsePayload<First, Rest...>
                      << " did not consume the expected number of bytes. "
                      << " Expected: " << distance(begin, end)
                      << ", Actual: " << distance(begin, res.second);
-        throw range_error(stringStream.str());
+        //throw range_error(stringStream.str());
       }
       handler(res.first);
     };
